@@ -72,7 +72,7 @@ static const char *dmenucmd[] = {
   "-sf", col_gray4,
   NULL
 };
-static const char *cmd_term[] = { "st", NULL };
+static const char *cmd_term[] = { "alacritty", NULL };
 static const char *cmd_www[]  = { "firefox", NULL };
 static const char *cmd_doc[]  = { "xreader", NULL };
 
@@ -92,8 +92,9 @@ static const char *vol_mute[] = {
 
 static Key keys[] = {
   // modifier        , key          , function       , argument
-  { MODKEY           , XK_BackSpace , quit           , {0} }                ,
-  { MODKEY           , XK_q         , killclient     , {0} }                ,
+  { MODKEY           , XK_BackSpace , quit           , {.i = 0 } }                ,
+  { MODKEY|ShiftMask , XK_BackSpace , quit           , {.i = 1 } }                ,
+  { MODKEY|ShiftMask , XK_q         , killclient     , {0} }                ,
   { MODKEY           , XK_b         , togglebar      , {0} }                ,
   { MODKEY           , XK_j         , focusstack     , {.i = +1 } }         ,
   { MODKEY           , XK_k         , focusstack     , {.i = -1 } }         ,

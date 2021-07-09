@@ -43,6 +43,7 @@
 
 #include "drw.h"
 #include "util.h"
+#include "status.h"
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -258,6 +259,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 };
 static Atom wmatom[WMLast], netatom[NetLast];
 static int running = 1;
+static int exit_code = 0;
 static Cur *cursor[CurLast];
 static Clr **scheme;
 static Display *dpy;
@@ -1210,6 +1212,7 @@ propertynotify(XEvent *e)
 void
 quit(const Arg *arg)
 {
+	exit_code = arg->i;
 	running = 0;
 }
 
@@ -1955,6 +1958,13 @@ updatestatus(void)
 		strcpy(stext, "dwm-"VERSION);
 	drawbar(selmon);
 }
+void
+updatestatus2(const char* str)
+{
+	strncpy(stext, str, sizeof(stext));
+        printf("%s\n",stext);
+	/* drawbar(selmon); */
+}
 
 void
 updatetitle(Client *c)
@@ -2105,9 +2115,10 @@ main(int argc, char *argv[])
 	if (pledge("stdio rpath proc exec", NULL) == -1)
 		die("pledge");
 #endif /* __OpenBSD__ */
+	poll_status();
 	scan();
 	run();
 	cleanup();
 	XCloseDisplay(dpy);
-	return EXIT_SUCCESS;
+	return exit_code;
 }
