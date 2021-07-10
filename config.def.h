@@ -72,25 +72,6 @@ static const char *dmenucmd[] = {
   "-sf", col_gray4,
   NULL
 };
-static const char *cmd_term[] = { "alacritty", NULL };
-static const char *cmd_www[]  = { "firefox", NULL };
-static const char *cmd_doc[]  = { "xreader", NULL };
-
-static const char *offscript[] = { "myoff", NULL };
-
-// Audio controls
-static const char *vol_up  [] = {
-  // "amixer", "set", "Master", "playback", "5+", NULL
-  "pactl", "set-sink-volume", "0", "+5%", NULL
-};
-static const char *vol_down[] = {
-  // "amixer", "set", "Master", "playback", "5-", NULL
-  "pactl", "set-sink-volume", "0", "-5%", NULL
-};
-static const char *vol_mute[] = {
-  // "amixer", "set", "Master", "toggle", NULL
-  "pactl", "set-sink-mute", "0", "toggle", NULL
-};
 
 static Key keys[] = {
   // modifier        , key          , function       , argument
@@ -120,29 +101,51 @@ static Key keys[] = {
   { MODKEY|ShiftMask , XK_comma     , tagmon         , {.i = -1 } }         ,
   { MODKEY|ShiftMask , XK_period    , tagmon         , {.i = +1 } }         ,
 
-  TAGKEYS(XK_1, 0)
-  TAGKEYS(XK_2, 1)
-  TAGKEYS(XK_3, 2)
-  TAGKEYS(XK_4, 3)
-  TAGKEYS(XK_5, 4)
-  TAGKEYS(XK_6, 5)
-  TAGKEYS(XK_7, 6)
-  TAGKEYS(XK_8, 7)
-  TAGKEYS(XK_9, 8)
+  TAGKEYS(XK_1, 0)  // TAGKEYS(XK_KP_1, 0)
+  TAGKEYS(XK_2, 1)  // TAGKEYS(XK_KP_2, 1)
+  TAGKEYS(XK_3, 2)  // TAGKEYS(XK_KP_3, 2)
+  TAGKEYS(XK_4, 3)  // TAGKEYS(XK_KP_4, 3)
+  TAGKEYS(XK_5, 4)  // TAGKEYS(XK_KP_5, 4)
+  TAGKEYS(XK_6, 5)  // TAGKEYS(XK_KP_6, 5)
+  TAGKEYS(XK_7, 6)  // TAGKEYS(XK_KP_7, 6)
+  TAGKEYS(XK_8, 7)  // TAGKEYS(XK_KP_8, 7)
+  TAGKEYS(XK_9, 8)  // TAGKEYS(XK_KP_9, 8)
 
   // Lauch programs
-  { MODKEY , XK_Return , spawn , {.v = cmd_term } } ,
-  { MODKEY , XK_p      , spawn , {.v = dmenucmd } } ,
-  { MODKEY , XK_w      , spawn , {.v = cmd_www  } } ,
-  { MODKEY , XK_d      , spawn , {.v = cmd_doc  } } ,
+  { MODKEY , XK_p      , spawn , {.v = dmenucmd } },
+  { MODKEY , XK_Return , spawn , {.v = (const char*[]){ "alacritty", NULL }}},
+  { MODKEY , XK_w      , spawn , {.v = (const char*[]){ "firefox", NULL }}},
+  { MODKEY , XK_d      , spawn , {.v = (const char*[]){ "xreader", NULL }}},
+  { MODKEY , XK_c      , spawn , {.v = (const char*[]){ "gcolor2", NULL }}},
 
   // Shutdown menu
-  { 0 , XF86XK_Sleep , spawn , {.v = offscript } } ,
+  { 0 , XF86XK_Sleep , spawn , {.v = (const char*[]){ "myoff", NULL }} } ,
 
   // Audio controls
-  { 0 , XF86XK_AudioRaiseVolume , spawn , {.v = vol_up   } } ,
-  { 0 , XF86XK_AudioLowerVolume , spawn , {.v = vol_down } } ,
-  { 0 , XF86XK_AudioMute        , spawn , {.v = vol_mute } } ,
+  { 0 , XF86XK_AudioRaiseVolume , spawn , {.v = (const char*[]){
+    // "amixer", "set", "Master", "playback", "5+", NULL
+    "pactl", "set-sink-volume", "0", "+5%", NULL
+  }}},
+  { 0 , XF86XK_AudioLowerVolume , spawn , {.v = (const char*[]){
+    // "amixer", "set", "Master", "playback", "5-", NULL
+    "pactl", "set-sink-volume", "0", "-5%", NULL
+  }}},
+  { 0 , XF86XK_AudioMute        , spawn , {.v = (const char*[]){
+    // "amixer", "set", "Master", "toggle", NULL
+    "pactl", "set-sink-mute", "0", "toggle", NULL
+  }}},
+  { 0 , XF86XK_AudioMicMute     , spawn , {.v = (const char*[]){
+    "pactl", "set-source-mute", "0", "toggle", NULL
+  }}},
+
+  // Screenshot
+  { 0           , XK_Print     , spawn , SHCMD(
+    "maim -u ~/Pictures/screenshots/$(date +%s%N).png"
+  )},
+  { ControlMask , XK_Print     , spawn , SHCMD(
+    "maim -uos ~/Pictures/screenshots/$(date +%s%N).png"
+  )},
+  // TODO: screenshot of the active window
 };
 
 /* button definitions */
