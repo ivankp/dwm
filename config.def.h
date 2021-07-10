@@ -76,6 +76,8 @@ static const char *cmd_term[] = { "alacritty", NULL };
 static const char *cmd_www[]  = { "firefox", NULL };
 static const char *cmd_doc[]  = { "xreader", NULL };
 
+static const char *offscript[] = { "myoff", NULL };
+
 // Audio controls
 static const char *vol_up  [] = {
   // "amixer", "set", "Master", "playback", "5+", NULL
@@ -133,6 +135,9 @@ static Key keys[] = {
   { MODKEY , XK_p      , spawn , {.v = dmenucmd } } ,
   { MODKEY , XK_w      , spawn , {.v = cmd_www  } } ,
   { MODKEY , XK_d      , spawn , {.v = cmd_doc  } } ,
+
+  // Shutdown menu
+  { 0 , XF86XK_Sleep , spawn , {.v = offscript } } ,
 
   // Audio controls
   { 0 , XF86XK_AudioRaiseVolume , spawn , {.v = vol_up   } } ,
