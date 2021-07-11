@@ -148,7 +148,9 @@ static Key keys[] = {
 #define SCR_NAME " ~/Pictures/screenshots/$(date +%s%N).png"
   { 0           , XK_Print , spawn , SHCMD("maim -u"   SCR_NAME)} ,
   { ControlMask , XK_Print , spawn , SHCMD("maim -uos" SCR_NAME)} ,
-  // TODO: screenshot of the active window
+  { ShiftMask   , XK_Print , spawn , SHCMD(
+    "maim -ui $(xdotool selectwindow)" SCR_NAME
+  )},
 };
 
 /* button definitions */
