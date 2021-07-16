@@ -43,7 +43,6 @@
 
 #include "drw.h"
 #include "util.h"
-#include "status.h"
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -1979,13 +1978,6 @@ updatestatus(void)
 		strcpy(stext, "dwm-"VERSION);
 	drawbar(selmon);
 }
-void
-updatestatus2(const char* str)
-{
-	strncpy(stext, str, sizeof(stext));
-        printf("%s\n",stext);
-	/* drawbar(selmon); */
-}
 
 void
 updatetitle(Client *c)
@@ -2136,7 +2128,6 @@ main(int argc, char *argv[])
 	if (pledge("stdio rpath proc exec", NULL) == -1)
 		die("pledge");
 #endif /* __OpenBSD__ */
-	poll_status();
 	scan();
 	run();
 	cleanup();

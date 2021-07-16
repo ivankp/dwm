@@ -32,9 +32,10 @@ static const Rule rules[] = {
    *  WM_CLASS(STRING) = instance, class
    *  WM_NAME(STRING) = title
    */
-  /* class      instance    title       tags mask     isfloating   monitor */
-  { "Gimp",     NULL,       NULL,       0,            1,           -1 },
-  { "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+  // class       , instance , title , tags mask , isfloating , monitor
+  // { "Gimp"    , NULL     , NULL  , 0         , 1          , -1 }    ,
+  // { "firefox" , NULL     , NULL  , 1 << 1    , 0          , -1 }    ,
+  { NULL         , NULL     , NULL  , 0         , False      , -1 }    ,
 };
 
 /* layout(s) */
@@ -120,12 +121,12 @@ static Key keys[] = {
   // Lauch programs
   { MODKEY , XK_p      , spawn , {.v = dmenucmd } },
   { MODKEY , XK_Return , spawn , {.v = (const char*[]){ "alacritty", NULL }}},
-  { MODKEY , XK_w      , spawn , {.v = (const char*[]){ "firefox", NULL }}},
+  { MODKEY , XK_w      , spawn , {.v = (const char*[]){ "google-chrome-stable", NULL }}},
   { MODKEY , XK_d      , spawn , {.v = (const char*[]){ "xreader", NULL }}},
   { MODKEY , XK_c      , spawn , {.v = (const char*[]){ "gcolor2", NULL }}},
 
   // Shutdown menu
-  { 0 , XF86XK_Sleep , spawn , {.v = (const char*[]){ "myoff", NULL }} } ,
+  { 0 , XF86XK_Sleep , spawn , {.v = (const char*[]){ "dmenu_off", NULL }} } ,
 
   // Audio controls
   { 0 , XF86XK_AudioRaiseVolume , spawn , {.v = (const char*[]){
@@ -142,6 +143,14 @@ static Key keys[] = {
   }}},
   { 0 , XF86XK_AudioMicMute     , spawn , {.v = (const char*[]){
     "pactl", "set-source-mute", "0", "toggle", NULL
+  }}},
+
+  // Brightness controls
+  { 0 , XF86XK_MonBrightnessUp   , spawn , {.v = (const char*[]){
+    "/home/ivanp/sys/brightness/brightness", "-u", NULL
+  }}},
+  { 0 , XF86XK_MonBrightnessDown , spawn , {.v = (const char*[]){
+    "/home/ivanp/sys/brightness/brightness", "-d", NULL
   }}},
 
   // Screenshot
