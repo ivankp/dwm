@@ -43,11 +43,13 @@ static const float mfact     = 0.5; // factor of master area size [0.05..0.95]
 static const int nmaster     = 1;   // number of clients in master area
 static const int resizehints = 1;   // 1 means respect size hints in tiled resizals
 
+#include "grid.c"
 static const Layout layouts[] = {
-  /* symbol     arrange function */
-  { "[]=",      tile },    /* first entry is default */
-  { "[M]",      monocle },
-  { "><>",      NULL },    /* no layout function means floating behavior */
+  // symbol , function , name
+  { "[]="   , tile     , "Tiled"    }, // first entry is default
+  { "[M]"   , monocle  , "Monocle"  },
+  { "HHH"   , grid     , "Grid"     },
+  { "><>"   , NULL     , "Floating" }, // no layout function means floating behavior
 };
 
 /* key definitions */
@@ -82,37 +84,38 @@ static const char *dmenucmd[] = {
 
 #include "movestack.c"
 static Key keys[] = {
-  // modifier        , key          , function       , argument
-  { MODKEY           , XK_BackSpace , quit           , {.i = 0 } }    ,
-  { MODKEY|ShiftMask , XK_BackSpace , quit           , {.i = 1 } }    ,
-  { MODKEY|ShiftMask , XK_q         , killclient     , {0} }          ,
-  { MODKEY|ShiftMask , XK_b         , togglebar      , {0} }          ,
-  { MODKEY           , XK_j         , focusstack     , {.i = +1 } }   ,
-  { MODKEY           , XK_k         , focusstack     , {.i = -1 } }   ,
-  { MODKEY           , XK_h         , setmfact       , {.f = -0.05} } ,
-  { MODKEY           , XK_l         , setmfact       , {.f = +0.05} } ,
-  { MODKEY|ShiftMask , XK_h         , incnmaster     , {.i = +1 } }   ,
-  { MODKEY|ShiftMask , XK_l         , incnmaster     , {.i = -1 } }   ,
-  { MODKEY           , XK_m         , focusmaster    , {0} }          ,
-  { MODKEY|ShiftMask , XK_m         , zoom           , {0} }          ,
-  { MODKEY           , XK_Tab       , view           , {0} }          ,
-  { MODKEY|ShiftMask , XK_f         , togglefullscr  , {0} }          ,
-  { MODKEY           , XK_space     , togglefloating , {0} }          ,
-  { MODKEY|ShiftMask , XK_space     , setlayout      , {0} }          ,
-  { MODKEY           , XK_0         , view           , {.ui = ~0 } }  ,
-  { MODKEY|ShiftMask , XK_0         , tag            , {.ui = ~0 } }  ,
-  { MODKEY           , XK_comma     , focusmon       , {.i = -1 } }   ,
-  { MODKEY           , XK_period    , focusmon       , {.i = +1 } }   ,
-  { MODKEY|ShiftMask , XK_comma     , tagmon         , {.i = -1 } }   ,
-  { MODKEY|ShiftMask , XK_period    , tagmon         , {.i = +1 } }   ,
-  { MODKEY           , XK_Left      , shiftview      , {.i = -1 } }   ,
-  { MODKEY           , XK_Right     , shiftview      , {.i = +1 } }   ,
-  { MODKEY|ShiftMask , XK_j         , movestack      , {.i = +1 } }   ,
-  { MODKEY|ShiftMask , XK_k         , movestack      , {.i = -1 } }   ,
+  // modifier          , key          , function       , argument
+  { MODKEY             , XK_BackSpace , quit           , {.i = 0 }    },
+  { MODKEY|ShiftMask   , XK_BackSpace , quit           , {.i = 1 }    },
+  { MODKEY|ShiftMask   , XK_q         , killclient     , {0}          },
+  { MODKEY|ShiftMask   , XK_b         , togglebar      , {0}          },
+  { MODKEY             , XK_j         , focusstack     , {.i = +1 }   },
+  { MODKEY             , XK_k         , focusstack     , {.i = -1 }   },
+  { MODKEY             , XK_h         , setmfact       , {.f = -0.05} },
+  { MODKEY             , XK_l         , setmfact       , {.f = +0.05} },
+  { MODKEY|ShiftMask   , XK_h         , incnmaster     , {.i = +1 }   },
+  { MODKEY|ShiftMask   , XK_l         , incnmaster     , {.i = -1 }   },
+  { MODKEY             , XK_m         , focusmaster    , {0}          },
+  { MODKEY|ShiftMask   , XK_m         , zoom           , {0}          },
+  { MODKEY             , XK_Tab       , view           , {0}          },
+  { MODKEY|ShiftMask   , XK_f         , togglefullscr  , {0}          },
+  { MODKEY             , XK_space     , togglefloating , {0}          },
+  { MODKEY|ControlMask , XK_space     , setlayout      , {0}          },
+  { MODKEY             , XK_0         , view           , {.ui = ~0 }  },
+  { MODKEY|ShiftMask   , XK_0         , tag            , {.ui = ~0 }  },
+  { MODKEY             , XK_comma     , focusmon       , {.i = -1 }   },
+  { MODKEY             , XK_period    , focusmon       , {.i = +1 }   },
+  { MODKEY|ShiftMask   , XK_comma     , tagmon         , {.i = -1 }   },
+  { MODKEY|ShiftMask   , XK_period    , tagmon         , {.i = +1 }   },
+  { MODKEY             , XK_Left      , shiftview      , {.i = -1 }   },
+  { MODKEY             , XK_Right     , shiftview      , {.i = +1 }   },
+  { MODKEY|ShiftMask   , XK_j         , movestack      , {.i = +1 }   },
+  { MODKEY|ShiftMask   , XK_k         , movestack      , {.i = -1 }   },
 
-  // { MODKEY        , XK_t         , setlayout      , {.v = &layouts[0]} } ,
-  // { MODKEY        , XK_f         , setlayout      , {.v = &layouts[1]} } ,
-  // { MODKEY        , XK_m         , setlayout      , {.v = &layouts[2]} } ,
+  { MODKEY|ControlMask , XK_t , setlayout , {.v = &layouts[0]} },
+  { MODKEY|ControlMask , XK_m , setlayout , {.v = &layouts[1]} },
+  { MODKEY|ControlMask , XK_g , setlayout , {.v = &layouts[2]} },
+  { MODKEY|ControlMask , XK_f , setlayout , {.v = &layouts[3]} },
 
   TAGKEYS(XK_1, 0)  // TAGKEYS(XK_KP_1, 0)
   TAGKEYS(XK_2, 1)  // TAGKEYS(XK_KP_2, 1)
@@ -132,7 +135,7 @@ static Key keys[] = {
   { MODKEY , XK_c      , spawn , CMD("gcolor2") },
 
   // Shutdown menu
-  { 0 , XF86XK_Sleep , spawn , CMD("dmenu_off") } ,
+  { 0 , XF86XK_Sleep , spawn , CMD("dmenu_off") },
 
   // Audio controls
   { 0 , XF86XK_AudioRaiseVolume , spawn , CMD(
@@ -172,16 +175,16 @@ static Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
  * ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
-  // click       event mask  button    function         argument
-  { ClkLtSymbol   , 0      , Button1 , setlayout      , {0} }                ,
-  { ClkLtSymbol   , 0      , Button3 , setlayout      , {.v = &layouts[2]} } ,
-  { ClkWinTitle   , 0      , Button2 , zoom           , {0} }                ,
-  // { ClkStatusText , 0   , Button2 , spawn          , {.v = cmd_term } }   ,
-  { ClkClientWin  , MODKEY , Button1 , movemouse      , {0} }                ,
-  { ClkClientWin  , MODKEY , Button2 , togglefloating , {0} }                ,
-  { ClkClientWin  , MODKEY , Button3 , resizemouse    , {0} }                ,
-  { ClkTagBar     , 0      , Button1 , view           , {0} }                ,
-  { ClkTagBar     , 0      , Button3 , toggleview     , {0} }                ,
-  { ClkTagBar     , MODKEY , Button1 , tag            , {0} }                ,
-  { ClkTagBar     , MODKEY , Button3 , toggletag      , {0} }                ,
+  // click event     , mask   , button  , function       , argument
+  // { ClkStatusText , 0      , Button2 , spawn          , {.v = cmd_term } },
+  { ClkLtSymbol      , 0      , Button1 , setlayout      , {0} },
+  { ClkLtSymbol      , 0      , Button3 , layoutmenu     , {0} },
+  { ClkWinTitle      , 0      , Button2 , zoom           , {0} },
+  { ClkClientWin     , MODKEY , Button1 , movemouse      , {0} },
+  { ClkClientWin     , MODKEY , Button2 , togglefloating , {0} },
+  { ClkClientWin     , MODKEY , Button3 , resizemouse    , {0} },
+  { ClkTagBar        , 0      , Button1 , view           , {0} },
+  { ClkTagBar        , 0      , Button3 , toggleview     , {0} },
+  { ClkTagBar        , MODKEY , Button1 , tag            , {0} },
+  { ClkTagBar        , MODKEY , Button3 , toggletag      , {0} },
 };

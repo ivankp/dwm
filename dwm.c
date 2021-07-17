@@ -43,6 +43,7 @@
 
 #include "drw.h"
 #include "util.h"
+#include "chad_pipe.h"
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -109,6 +110,7 @@ typedef struct {
 typedef struct {
 	const char *symbol;
 	void (*arrange)(Monitor *);
+	const char *name;
 } Layout;
 
 struct Monitor {
@@ -178,6 +180,7 @@ static void grabkeys(void);
 static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
+static void layoutmenu(const Arg *arg);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
@@ -1006,6 +1009,23 @@ killclient(const Arg *arg)
 		XSetErrorHandler(xerror);
 		XUngrabServer(dpy);
 	}
+}
+
+void
+layoutmenu(const Arg *arg) {
+  static char buf[256];
+  int len = 0;
+  for (int i=0, n=sizeof(layouts)/sizeof(layouts[0]); i<n; ++i) {
+    len += snprintf(buf+len,sizeof(buf)-len, "%s %s\t%d\n",
+      layouts[i].symbol, layouts[i].name, i
+    );
+    if (len >= sizeof(buf)) return;
+  }
+
+  if (chad_pipe(buf,sizeof(buf),"xmenu","xmenu",NULL) != -1) {
+    int i = atoi(buf);
+    setlayout(&((Arg){ .v = &layouts[i] }));
+  }
 }
 
 void
