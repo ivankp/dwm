@@ -58,8 +58,14 @@ static const Layout layouts[] = {
   { MODKEY|ShiftMask             , KEY , tag        , {.ui = 1 << TAG} } , \
   { MODKEY|ControlMask|ShiftMask , KEY , toggletag  , {.ui = 1 << TAG} } ,
 
+#ifdef CMD
+#error "CMD already defined"
+#else
+#define CMD(...) { .v = (const char*[]){ __VA_ARGS__, NULL } }
+#endif
+
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define SHCMD(cmd) CMD("/bin/sh", "-c", cmd)
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -120,38 +126,38 @@ static Key keys[] = {
 
   // Lauch programs
   { MODKEY , XK_p      , spawn , {.v = dmenucmd } },
-  { MODKEY , XK_Return , spawn , {.v = (const char*[]){ "alacritty", NULL }}},
-  { MODKEY , XK_w      , spawn , {.v = (const char*[]){ "google-chrome-stable", NULL }}},
-  { MODKEY , XK_d      , spawn , {.v = (const char*[]){ "xreader", NULL }}},
-  { MODKEY , XK_c      , spawn , {.v = (const char*[]){ "gcolor2", NULL }}},
+  { MODKEY , XK_Return , spawn , CMD("alacritty") },
+  { MODKEY , XK_w      , spawn , CMD("google-chrome-stable") },
+  { MODKEY , XK_d      , spawn , CMD("xreader") },
+  { MODKEY , XK_c      , spawn , CMD("gcolor2") },
 
   // Shutdown menu
-  { 0 , XF86XK_Sleep , spawn , {.v = (const char*[]){ "dmenu_off", NULL }} } ,
+  { 0 , XF86XK_Sleep , spawn , CMD("dmenu_off") } ,
 
   // Audio controls
-  { 0 , XF86XK_AudioRaiseVolume , spawn , {.v = (const char*[]){
-    // "amixer", "set", "Master", "playback", "5+", NULL
-    "pactl", "set-sink-volume", "0", "+5%", NULL
-  }}},
-  { 0 , XF86XK_AudioLowerVolume , spawn , {.v = (const char*[]){
-    // "amixer", "set", "Master", "playback", "5-", NULL
-    "pactl", "set-sink-volume", "0", "-5%", NULL
-  }}},
-  { 0 , XF86XK_AudioMute        , spawn , {.v = (const char*[]){
-    // "amixer", "set", "Master", "toggle", NULL
-    "pactl", "set-sink-mute", "0", "toggle", NULL
-  }}},
-  { 0 , XF86XK_AudioMicMute     , spawn , {.v = (const char*[]){
-    "pactl", "set-source-mute", "0", "toggle", NULL
-  }}},
+  { 0 , XF86XK_AudioRaiseVolume , spawn , CMD(
+    // "amixer", "set", "Master", "playback", "5+"
+    "pactl", "set-sink-volume", "0", "+5%"
+  )},
+  { 0 , XF86XK_AudioLowerVolume , spawn , CMD(
+    // "amixer", "set", "Master", "playback", "5-"
+    "pactl", "set-sink-volume", "0", "-5%"
+  )},
+  { 0 , XF86XK_AudioMute        , spawn , CMD(
+    // "amixer", "set", "Master", "toggle"
+    "pactl", "set-sink-mute", "0", "toggle"
+  )},
+  { 0 , XF86XK_AudioMicMute     , spawn , CMD(
+    "pactl", "set-source-mute", "0", "toggle"
+  )},
 
   // Brightness controls
-  { 0 , XF86XK_MonBrightnessUp   , spawn , {.v = (const char*[]){
-    "/home/ivanp/sys/brightness/brightness", "-u", NULL
-  }}},
-  { 0 , XF86XK_MonBrightnessDown , spawn , {.v = (const char*[]){
-    "/home/ivanp/sys/brightness/brightness", "-d", NULL
-  }}},
+  { 0 , XF86XK_MonBrightnessUp   , spawn , CMD(
+    "/home/ivanp/sys/brightness/brightness", "-u"
+  )},
+  { 0 , XF86XK_MonBrightnessDown , spawn , CMD(
+    "/home/ivanp/sys/brightness/brightness", "-d"
+  )},
 
   // Screenshot
 #define SCR_NAME " ~/Pictures/screenshots/$(date +%s%N).png"
@@ -170,7 +176,7 @@ static Button buttons[] = {
   { ClkLtSymbol   , 0      , Button1 , setlayout      , {0} }                ,
   { ClkLtSymbol   , 0      , Button3 , setlayout      , {.v = &layouts[2]} } ,
   { ClkWinTitle   , 0      , Button2 , zoom           , {0} }                ,
-  // { ClkStatusText , 0      , Button2 , spawn          , {.v = cmd_term } }   ,
+  // { ClkStatusText , 0   , Button2 , spawn          , {.v = cmd_term } }   ,
   { ClkClientWin  , MODKEY , Button1 , movemouse      , {0} }                ,
   { ClkClientWin  , MODKEY , Button2 , togglefloating , {0} }                ,
   { ClkClientWin  , MODKEY , Button3 , resizemouse    , {0} }                ,
@@ -179,4 +185,3 @@ static Button buttons[] = {
   { ClkTagBar     , MODKEY , Button1 , tag            , {0} }                ,
   { ClkTagBar     , MODKEY , Button3 , toggletag      , {0} }                ,
 };
-
