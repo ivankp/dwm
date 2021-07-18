@@ -1022,7 +1022,7 @@ layoutmenu(const Arg *arg) {
     if (len >= sizeof(buf)) return;
   }
 
-  if (chad_pipe(buf,sizeof(buf),"xmenu","xmenu",NULL) != -1) {
+  if (chad_pipe(buf,sizeof(buf),(char*[]){"xmenu",NULL}) != -1) {
     int i = atoi(buf);
     setlayout(&((Arg){ .v = &layouts[i] }));
   }

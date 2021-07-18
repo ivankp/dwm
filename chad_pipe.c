@@ -16,7 +16,7 @@
 
 // https://gist.github.com/yalue/cbc2a246bcc7e71824c45f31cf48cee8
 
-int chad_pipe(char* buf, size_t len, const char* prog, ...) {
+int chad_pipe(char* buf, size_t len, char* const prog[]) {
   int pipe1[2], pipe2[2];
   if (pipe(pipe1) != 0) { ERR("pipe"); return -1; }
   if (pipe(pipe2) != 0) { ERR("pipe"); return -1; }
@@ -28,7 +28,7 @@ int chad_pipe(char* buf, size_t len, const char* prog, ...) {
     close(pipe2[0]); // close the read end
     if (dup2(pipe1[0], STDIN_FILENO ) < 0) { ERR("dup2"); return -1; }
     if (dup2(pipe2[1], STDOUT_FILENO) < 0) { ERR("dup2"); return -1; }
-    if (execlp("xmenu", "xmenu", NULL) < 0) { ERR("execlp"); return -1; }
+    if (execvp(prog[0],prog) < 0) { ERR("execvp"); return -1; }
     // child process is replaced by exec()
   }
 
