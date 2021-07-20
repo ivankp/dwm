@@ -98,6 +98,7 @@ static Key keys[] = {
   { MODKEY             , XK_m         , focusmaster    , {0}          },
   { MODKEY|ShiftMask   , XK_m         , zoom           , {0}          },
   { MODKEY             , XK_Tab       , view           , {0}          },
+  // { Mod1Mask        , XK_Tab       , focusstack     , {0}          },
   { MODKEY|ShiftMask   , XK_f         , togglefullscr  , {0}          },
   { MODKEY             , XK_space     , togglefloating , {0}          },
   { MODKEY|ControlMask , XK_space     , setlayout      , {0}          },
@@ -133,6 +134,7 @@ static Key keys[] = {
   { MODKEY , XK_w      , spawn , CMD("google-chrome-stable") },
   { MODKEY , XK_d      , spawn , CMD("xreader") },
   { MODKEY , XK_c      , spawn , CMD("gcolor2") },
+  { MODKEY|ShiftMask , XK_w , spawn , CMD("google-chrome-stable", "--incognito") },
 
   // Shutdown menu
   { 0 , XF86XK_Sleep , spawn , CMD("dmenu_off") },
