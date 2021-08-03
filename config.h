@@ -165,12 +165,15 @@ static Key keys[] = {
   )},
 
   // Screenshot
-#define SCR_NAME " ~/Pictures/screenshots/$(date +%s%N).png"
-  { 0           , XK_Print , spawn , SHCMD("maim -u"   SCR_NAME)} ,
-  { ControlMask , XK_Print , spawn , SHCMD("maim -uos" SCR_NAME)} ,
-  { ShiftMask   , XK_Print , spawn , SHCMD(
-    "maim -ui $(xdotool selectwindow)" SCR_NAME
-  )},
+#define SCR_CMD(ARGS) SHCMD( \
+  "NAME=\"$HOME/Pictures/screenshots/$(date +%s%N).png\";" \
+  "maim " ARGS " \"$NAME\";" \
+  "echo \"$NAME\" | xclip -r -selection clipboard" \
+)
+  { 0          , XK_Print, spawn, SCR_CMD("-u"  ) },
+  { ControlMask, XK_Print, spawn, SCR_CMD("-uos") },
+  { ShiftMask  , XK_Print, spawn, SCR_CMD("-ui $(xdotool getactivewindow)") },
+  { Mod1Mask   , XK_Print, spawn, SCR_CMD("-ui $(xdotool selectwindow)") },
 };
 
 /* button definitions */
