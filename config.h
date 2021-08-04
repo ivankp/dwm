@@ -164,6 +164,11 @@ static Key keys[] = {
     "/home/ivanp/sys/brightness/brightness", "-d"
   )},
 
+  // Player controls
+  { MODKEY|ControlMask, XK_Down , spawn, CMD("playerctl","play-pause")},
+  { MODKEY|ControlMask, XK_Left , spawn, CMD("playerctl","previous")},
+  { MODKEY|ControlMask, XK_Right, spawn, CMD("playerctl","next")},
+
   // Screenshot
 #define SCR_CMD(ARGS) SHCMD( \
   "NAME=\"$HOME/Pictures/screenshots/$(date +%s%N).png\";" \
