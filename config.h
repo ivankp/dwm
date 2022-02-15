@@ -35,7 +35,8 @@ static const Rule rules[] = {
   // class       , instance , title , tags mask , isfloating , monitor
   // { "Gimp"    , NULL     , NULL  , 0         , 1          , -1 }    ,
   // { "firefox" , NULL     , NULL  , 1 << 1    , 0          , -1 }    ,
-  { NULL         , NULL     , NULL  , 0         , False      , -1 }    ,
+  { "zoom"       , NULL     , NULL  , 1 << 4    , 0          , -1 }    ,
+  { NULL         , NULL     , NULL  , 0         , 0          , -1 }    ,
 };
 
 /* layout(s) */
@@ -110,6 +111,8 @@ static Key keys[] = {
   { MODKEY|ShiftMask   , XK_period    , tagmon         , {.i = +1 }   },
   { MODKEY             , XK_Left      , shiftview      , {.i = -1 }   },
   { MODKEY             , XK_Right     , shiftview      , {.i = +1 }   },
+  { MODKEY             , XK_Page_Up   , shiftview      , {.i = -1 }   },
+  { MODKEY             , XK_Page_Down , shiftview      , {.i = +1 }   },
   { MODKEY|ShiftMask   , XK_j         , movestack      , {.i = +1 }   },
   { MODKEY|ShiftMask   , XK_k         , movestack      , {.i = -1 }   },
 
@@ -130,10 +133,13 @@ static Key keys[] = {
 
   // Lauch programs
   { MODKEY , XK_p      , spawn , {.v = dmenucmd } },
-  { MODKEY , XK_Return , spawn , CMD("alacritty") },
+  { MODKEY , XK_Return , spawn , CMD("terminal-cwd") },
   { MODKEY , XK_w      , spawn , CMD("google-chrome-stable") },
   { MODKEY , XK_d      , spawn , CMD("xreader") },
   { MODKEY , XK_c      , spawn , CMD("gcolor2") },
+  { MODKEY , XK_v      , spawn , CMD("pavucontrol") },
+  { MODKEY , XK_f      , spawn , CMD("thunar") },
+  { MODKEY , XK_s      , spawn , CMD("slack") },
   { MODKEY|ShiftMask , XK_w , spawn , CMD("google-chrome-stable", "--incognito") },
 
   // Shutdown menu
