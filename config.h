@@ -35,8 +35,10 @@ static const Rule rules[] = {
   // class       , instance , title , tags mask , isfloating , monitor
   // { "Gimp"    , NULL     , NULL  , 0         , 1          , -1 }    ,
   // { "firefox" , NULL     , NULL  , 1 << 1    , 0          , -1 }    ,
-  { "zoom"       , NULL     , NULL  , 1 << 4    , 0          , -1 }    ,
-  { NULL         , NULL     , NULL  , 0         , 0          , -1 }    ,
+  // { "zoom"       , NULL     , NULL  , 1 << 4    , 0          , -1 }    ,
+  { NULL , NULL , "Zoom Meeting" , 1 << 4 , 0 , -1 } ,
+  { NULL , NULL , "Zoom -"       , 1 << 8 , 0 , -1 } ,
+  { NULL , NULL , NULL           , 0      , 0 , -1 } ,
 };
 
 /* layout(s) */
@@ -139,7 +141,8 @@ static Key keys[] = {
 
   // Lauch programs
   { MODKEY , XK_p      , spawn , {.v = dmenucmd } },
-  { MODKEY , XK_Return , spawn , CMD("terminal-cwd") },
+  // { MODKEY , XK_Return , spawn , CMD("terminal-cwd") },
+  { MODKEY , XK_Return , spawn , CMD("alacritty") },
   { MODKEY , XK_w      , spawn , CMD("google-chrome-stable") },
   { MODKEY , XK_d      , spawn , CMD("xreader") },
   { MODKEY , XK_c      , spawn , CMD("gcolor2") },
@@ -148,24 +151,34 @@ static Key keys[] = {
   { MODKEY , XK_s      , spawn , CMD("slack") },
   { MODKEY|ShiftMask , XK_w , spawn , CMD("google-chrome-stable", "--incognito") },
 
+  // dmenu shortcuts
+  // google calendar meetings
+  { MODKEY , XK_F10  , spawn, CMD("ugcal","--dmenu") },
+  // clips
+  { MODKEY , XK_slash, spawn, CMD("dmenu_clip") },
+
   // Shutdown menu
   { 0 , XF86XK_Sleep , spawn , CMD("dmenu_off") },
 
   // Audio controls
-  { 0 , XF86XK_AudioRaiseVolume , spawn , CMD(
+  { 0 , XF86XK_AudioRaiseVolume , spawn , SHCMD(
     // "amixer", "set", "Master", "playback", "5+"
-    "pactl", "set-sink-volume", "0", "+5%"
+    // "pactl", "set-sink-volume", "0", "+5%"
+    "pactl set-sink-volume \"`pactl get-default-sink`\" +5%"
   )},
-  { 0 , XF86XK_AudioLowerVolume , spawn , CMD(
+  { 0 , XF86XK_AudioLowerVolume , spawn , SHCMD(
     // "amixer", "set", "Master", "playback", "5-"
-    "pactl", "set-sink-volume", "0", "-5%"
+    // "pactl", "set-sink-volume", "0", "-5%"
+    "pactl set-sink-volume \"`pactl get-default-sink`\" -5%"
   )},
-  { 0 , XF86XK_AudioMute        , spawn , CMD(
+  { 0 , XF86XK_AudioMute        , spawn , SHCMD(
     // "amixer", "set", "Master", "toggle"
-    "pactl", "set-sink-mute", "0", "toggle"
+    // "pactl", "set-sink-mute", "0", "toggle"
+    "pactl set-sink-mute \"`pactl get-default-sink`\" toggle"
   )},
-  { 0 , XF86XK_AudioMicMute     , spawn , CMD(
-    "pactl", "set-source-mute", "0", "toggle"
+  { 0 , XF86XK_AudioMicMute     , spawn , SHCMD(
+    // "pactl", "set-source-mute", "0", "toggle"
+    "pactl set-source-mute \"`pactl get-default-source`\" toggle"
   )},
 
   // Brightness controls
