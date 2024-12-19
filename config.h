@@ -36,8 +36,8 @@ static const Rule rules[] = {
   // { "Gimp"    , NULL     , NULL  , 0         , 1          , -1 }    ,
   // { "firefox" , NULL     , NULL  , 1 << 1    , 0          , -1 }    ,
   // { "zoom"       , NULL     , NULL  , 1 << 4    , 0          , -1 }    ,
-  { NULL , NULL , "Zoom Meeting" , 1 << 4 , 0 , -1 } ,
-  { NULL , NULL , "Zoom -"       , 1 << 8 , 0 , -1 } ,
+  // { NULL , NULL , "Zoom Meeting" , 1 << 4 , 0 , -1 } ,
+  // { NULL , NULL , "Zoom -"       , 1 << 8 , 0 , -1 } ,
   { NULL , NULL , NULL           , 0      , 0 , -1 } ,
 };
 
@@ -124,10 +124,10 @@ static Key keys[] = {
   { MODKEY|ShiftMask   , XK_Page_Up   , shifttagclients  , {.i = -1 }   },
   { MODKEY|ShiftMask   , XK_Page_Down , shifttagclients  , {.i = +1 }   },
 
-  { MODKEY|ControlMask , XK_t , setlayout , {.v = &layouts[0]} },
-  { MODKEY|ControlMask , XK_m , setlayout , {.v = &layouts[1]} },
-  { MODKEY|ControlMask , XK_g , setlayout , {.v = &layouts[2]} },
-  { MODKEY|ControlMask , XK_f , setlayout , {.v = &layouts[3]} },
+  // { MODKEY|ControlMask , XK_t , setlayout , {.v = &layouts[0]} },
+  // { MODKEY|ControlMask , XK_m , setlayout , {.v = &layouts[1]} },
+  // { MODKEY|ControlMask , XK_g , setlayout , {.v = &layouts[2]} },
+  // { MODKEY|ControlMask , XK_f , setlayout , {.v = &layouts[3]} },
 
   TAGKEYS(XK_1, 0)  // TAGKEYS(XK_KP_1, 0)
   TAGKEYS(XK_2, 1)  // TAGKEYS(XK_KP_2, 1)
@@ -140,7 +140,7 @@ static Key keys[] = {
   TAGKEYS(XK_9, 8)  // TAGKEYS(XK_KP_9, 8)
 
   // Lauch programs
-  { MODKEY , XK_p      , spawn , {.v = dmenucmd } },
+  { MODKEY , XK_o      , spawn , {.v = dmenucmd } },
   // { MODKEY , XK_Return , spawn , CMD("terminal-cwd") },
   { MODKEY , XK_Return , spawn , CMD("alacritty") },
   { MODKEY , XK_w      , spawn , CMD("google-chrome-stable") },
@@ -148,12 +148,13 @@ static Key keys[] = {
   { MODKEY , XK_c      , spawn , CMD("gcolor2") },
   { MODKEY , XK_v      , spawn , CMD("pavucontrol") },
   { MODKEY , XK_f      , spawn , CMD("thunar") },
-  { MODKEY , XK_s      , spawn , CMD("slack") },
+  // { MODKEY , XK_s      , spawn , CMD("slack") },
+  { MODKEY , XK_p      , spawn , CMD("system-config-printer") },
   { MODKEY|ShiftMask , XK_w , spawn , CMD("google-chrome-stable", "--incognito") },
 
+  { MODKEY|ControlMask , XK_m , spawn , CMD("arandr") },
+
   // dmenu shortcuts
-  // google calendar meetings
-  { MODKEY , XK_F10  , spawn, CMD("ugcal","--dmenu") },
   // clips
   { MODKEY , XK_slash, spawn, CMD("dmenu_clip") },
 
@@ -162,22 +163,15 @@ static Key keys[] = {
 
   // Audio controls
   { 0 , XF86XK_AudioRaiseVolume , spawn , SHCMD(
-    // "amixer", "set", "Master", "playback", "5+"
-    // "pactl", "set-sink-volume", "0", "+5%"
     "pactl set-sink-volume \"`pactl get-default-sink`\" +5%"
   )},
   { 0 , XF86XK_AudioLowerVolume , spawn , SHCMD(
-    // "amixer", "set", "Master", "playback", "5-"
-    // "pactl", "set-sink-volume", "0", "-5%"
     "pactl set-sink-volume \"`pactl get-default-sink`\" -5%"
   )},
   { 0 , XF86XK_AudioMute        , spawn , SHCMD(
-    // "amixer", "set", "Master", "toggle"
-    // "pactl", "set-sink-mute", "0", "toggle"
     "pactl set-sink-mute \"`pactl get-default-sink`\" toggle"
   )},
   { 0 , XF86XK_AudioMicMute     , spawn , SHCMD(
-    // "pactl", "set-source-mute", "0", "toggle"
     "pactl set-source-mute \"`pactl get-default-source`\" toggle"
   )},
 
@@ -195,8 +189,9 @@ static Key keys[] = {
   { MODKEY|ControlMask, XK_Right, spawn, CMD("playerctl","next")},
 
   // Screenshot
+#define SCR_DIR "$HOME/Pictures/screenshots"
 #define SCR_CMD(ARGS) SHCMD( \
-  "NAME=\"$HOME/Pictures/screenshots/$(date +%s%N).png\";" \
+  "NAME=\"" SCR_DIR "/$(date +%s%N).png\";" \
   "maim " ARGS " \"$NAME\";" \
   "echo \"$NAME\" | xclip -r -selection clipboard" \
 )
@@ -204,6 +199,9 @@ static Key keys[] = {
   { ControlMask, XK_Print, spawn, SCR_CMD("-uos") },
   { ShiftMask  , XK_Print, spawn, SCR_CMD("-ui $(xdotool getactivewindow)") },
   { Mod1Mask   , XK_Print, spawn, SCR_CMD("-ui $(xdotool selectwindow)") },
+  { MODKEY     , XK_Print, spawn, SHCMD(
+    "feh \"`find \"" SCR_DIR "\" -maxdepth 1 -type f | sort -r | head -1`\""
+  ) },
 
   // mount and unmount
   { MODKEY , XK_bracketleft , spawn, CMD( "mnt") },
@@ -218,7 +216,7 @@ static Button buttons[] = {
   // { ClkStatusText , 0      , Button2 , spawn          , {.v = cmd_term } },
   { ClkLtSymbol      , 0      , Button1 , setlayout      , {0} },
   { ClkLtSymbol      , 0      , Button3 , layoutmenu     , {0} },
-  { ClkWinTitle      , 0      , Button2 , zoom           , {0} },
+  // { ClkWinTitle      , 0      , Button2 , zoom           , {0} },
   { ClkClientWin     , MODKEY , Button1 , movemouse      , {0} },
   { ClkClientWin     , MODKEY , Button2 , togglefloating , {0} },
   { ClkClientWin     , MODKEY , Button3 , resizemouse    , {0} },
